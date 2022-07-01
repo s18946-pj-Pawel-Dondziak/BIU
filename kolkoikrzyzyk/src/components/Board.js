@@ -1,5 +1,5 @@
 import React from "react";
-import Square from "./Square"
+import Square from "./Square";
 
 const Board = ({ squares, onClick}) => (
     <div className='board'>
@@ -8,5 +8,3 @@ const Board = ({ squares, onClick}) => (
         ))}
     </div>
 );
-
-export defoult Board;
