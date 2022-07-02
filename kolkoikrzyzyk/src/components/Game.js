@@ -14,16 +14,11 @@ function gamePlayersReducer(state, action) {
       ];
     case "UPDATE_PLAYERS_STATISTICKS":
       const playerToUpdate = state.find(st => action.player === st.player)
-      console.log(playerToUpdate)
-      
-      const updatedPalyer = { player: action.player, score: playerToUpdate.score + 1 }
-      console.log(updatedPalyer)
 
+      const updatedPalyer = { player: action.player, score: playerToUpdate.score + 1 }
       const filtredArray = state.filter(st => st.player !== action.player);
-      console.log(filtredArray)
 
       filtredArray.push(updatedPalyer);
-      console.log(filtredArray)
 
       return filtredArray;
     default:
@@ -46,27 +41,22 @@ const Game = () => {
     const current = historyPoint[stepNumber];
     const squares = [...current];
 
-    console.log(winner);
-
-    if (squares[i]) return;
-
-    if (winner) {
-      console.log(winner)
-
-      const playerExist = scoreArray.find(str => str.name === winner)
-
-      playerExist
-        ? scoreArrayDispatch({ type: "UPDATE_PLAYERS_STATISTICKS", player: winner })
-        : scoreArrayDispatch({ type: "ADD_NEW_PLAYER_STATS", player: winner, score: 1 })
-
-      return;
-    }
+    if (winner || squares[i]) return;
 
     squares[i] = xO;
-
     setHistory([...historyPoint, squares]);
     setStepNumber(historyPoint.length);
     setXisNext(!xIsNext);
+  };
+
+  const saveScoreClick = () => {
+    if (!winner) return;
+    const playerExist = scoreArray.find(str => str.player === winner);
+
+    playerExist !== undefined
+      ? scoreArrayDispatch({ type: "UPDATE_PLAYERS_STATISTICKS", player: winner })
+      : scoreArrayDispatch({ type: "ADD_NEW_PLAYER_STATS", player: winner, score: 1 })
+    return;
   };
 
   const jumpTo = (step) => {
@@ -96,6 +86,7 @@ const Game = () => {
           {renderMoves()}
         </div>
         <h3>{winner ? "Winner: " + winner : "Next Player: " + xO}</h3>
+        {winner && <button onClick={saveScoreClick}>Save Score</button>}
       </div>
     </>
   );
