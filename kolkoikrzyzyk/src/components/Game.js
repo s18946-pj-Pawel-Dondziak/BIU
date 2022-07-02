@@ -30,6 +30,7 @@ const Game = () => {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsNext, setXisNext] = useState(true);
+  const [playerName, setPlayerName] = useState("");
 
   const [scoreArray, scoreArrayDispatch] = React.useReducer(gamePlayersReducer, gamePlayersInitState, init => init);
 
@@ -51,11 +52,14 @@ const Game = () => {
 
   const saveScoreClick = () => {
     if (!winner) return;
-    const playerExist = scoreArray.find(str => str.player === winner);
+    if(!playerName) setPlayerName("Anonim");
+    if(playerName==="") setPlayerName("Anonim");
+    
+    const playerExist = scoreArray.find(str => str.player === playerName);
 
     playerExist !== undefined
-      ? scoreArrayDispatch({ type: "UPDATE_PLAYERS_STATISTICKS", player: winner })
-      : scoreArrayDispatch({ type: "ADD_NEW_PLAYER_STATS", player: winner, score: 1 })
+      ? scoreArrayDispatch({ type: "UPDATE_PLAYERS_STATISTICKS", player: playerName })
+      : scoreArrayDispatch({ type: "ADD_NEW_PLAYER_STATS", player: playerName, score: 1 })
     return;
   };
 
@@ -86,7 +90,12 @@ const Game = () => {
           {renderMoves()}
         </div>
         <h3>{winner ? "Winner: " + winner : "Next Player: " + xO}</h3>
-        {winner && <button onClick={saveScoreClick}>Save Score</button>}
+        {winner && (
+          <>
+            <input type="text" onChange={(event) => setPlayerName(event.target.value)}/>
+            <button onClick={saveScoreClick}>Save Score</button>
+          </>
+        )}
       </div>
     </>
   );
